@@ -1,0 +1,219 @@
+/* Основные цвета в спокойной палитре */
+:root {
+  --bg-color: #f0f4f8; /* Светлый фон */
+  --main-color: #cbd5e1; /* Основной цвет стекла */
+  --accent-color: #60a5fa; /* Голубой акцент */
+  --shadow-color: rgba(160, 180, 200, 0.2);
+  --inner-shadow-color: rgba(255, 255, 255, 0.6);
+  --text-color: #1e293b;
+  --user-bubble-color: rgba(255, 255, 255, 0.8);
+  --bot-bubble-color: rgba(255, 255, 255, 0.5);
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* ---------------------------------------------------- */
+/* 1. Стили Glassmorphism */
+/* ---------------------------------------------------- */
+
+.chatbot-container {
+  width: 100%;
+  max-width: 600px;
+  height: 90vh;
+  max-height: 800px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+
+  /* Эффект Glassmorphism на контейнере */
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 var(--shadow-color);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--inner-shadow-color);
+}
+
+.glass-header,
+.input-form {
+  padding: 15px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.glass-header h2 {
+  margin: 0;
+  color: var(--text-color);
+  font-size: 1.5em;
+}
+.glass-header small {
+  color: #475569;
+}
+
+/* ---------------------------------------------------- */
+/* 2. Стили Области Чата */
+/* ---------------------------------------------------- */
+
+.chat-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 15px 20px;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.message-content {
+  max-width: 80%;
+  padding: 12px 18px;
+  border-radius: 18px;
+  position: relative;
+  color: var(--text-color);
+  line-height: 1.4;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.user-message {
+  justify-content: flex-end;
+}
+
+.user-message .message-content {
+  background-color: var(--user-bubble-color);
+  border-bottom-right-radius: 2px;
+}
+
+.bot-message .message-content {
+  background-color: var(--bot-bubble-color);
+  border-bottom-left-radius: 2px;
+}
+
+.system-message .message-content {
+  text-align: center;
+  background-color: #fef3c7; /* Мягкое предупреждение */
+  color: #9a3412;
+  margin: 0 auto;
+}
+
+.welcome-message {
+  text-align: center;
+  padding: 50px 20px;
+  color: #64748b;
+  font-size: 1.1em;
+}
+
+/* Источники (Sources) */
+.sources-container summary {
+  font-size: 0.8em;
+  color: var(--accent-color);
+  cursor: pointer;
+  margin-top: 5px;
+}
+.sources-container ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 5px;
+  font-size: 0.75em;
+  background: rgba(240, 240, 240, 0.7);
+  padding: 10px;
+  border-radius: 10px;
+}
+.sources-container li {
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+/* ---------------------------------------------------- */
+/* 3. Стили Ввода (Input) */
+/* ---------------------------------------------------- */
+
+.input-form {
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.glass-input {
+  flex-grow: 1;
+  padding: 12px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  font-size: 1em;
+  outline: none;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.glass-input:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3);
+}
+
+.glass-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1em;
+
+  /* Стили Glass Button */
+  background: var(--accent-color);
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.glass-button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.glass-button:hover:not(:disabled) {
+  background: #3b82f6;
+}
+
+.glass-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Стили для загрузки */
+.loading-dots {
+  display: flex;
+  align-self: flex-start;
+  padding: 12px 18px;
+  font-size: 2em;
+  line-height: 0.5;
+}
+.loading-dots span {
+  animation: blink 1.4s infinite;
+  opacity: 0.2;
+}
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
