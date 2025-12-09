@@ -110,12 +110,13 @@ async function askGemini(query, relevantChunks, history = []) {
 КОНТЕКСТ:
 ${context}
 ИНСТРУКЦИИ:
-- Полагайся только на то, что есть в КОНТЕКСТЕ и предыдущем диалоге.
-- Весь КОНТЕНТ который тебе передается с запросом тоде считается за КОНТЕКСТ
-- Если информации не хватает, посмотри ответ в контенте, в крайнем случае ответь фразой: "В базе знаний нет информации для ответа на этот вопрос".
+- Полагайся на то, что есть в КОНТЕКСТЕ и предыдущем диалоге.
+- Весь КОНТЕНТ который тебе передается с запросом тоже считается за КОНТЕКСТ
+- Если информации не хватает, посмотри ответ в контенте, в крайнем случае ответь фразой: советом к походу к психологу.
 - Если используешь данные из КОНТЕКСТА, указывай источник в виде [Источник N].
 - Общайся бережно, спокойно и профессионально.
 - Не делай выводов, которых нет в КОНТЕКСТЕ.
+- На благодарность отвечай тоже благодарностью
 - Не давай клинических диагнозов.
 - Если вопрос предполагает поддержку, сначала отрази эмоции пользователя, но только если это подтверждается КОНТЕКСТОМ.
 `;
@@ -223,28 +224,28 @@ const chunky = async (text) => {
   ).chunk(text);
 };
 
-(async () => {
-  const collection = await chroma.getOrCreateCollection({
-    name: "PsyhologyDate",
-    embeddingFunction: embedder,
-  });
-  let globalIndex = 0;
-  for (const text of DATA) {
-    const chunks = await chunky(text);
-    await collection.add({
-      ids: chunks.map((_, i) => `chunk_${globalIndex++}`),
-      documents: chunks.map((c) => c.text),
-      metadatas: chunks.map((c) => ({
-        startIndex: c.startIndex,
-        endIndex: c.endIndex,
-        tokenCount: c.tokenCount,
-      })),
-    });
-  }
+// (async () => {
+//   const collection = await chroma.getOrCreateCollection({
+//     name: "PsyhologyDate",
+//     embeddingFunction: embedder,
+//   });
+//   let globalIndex = 0;
+//   for (const text of DATA) {
+//     const chunks = await chunky(text);
+//     await collection.add({
+//       ids: chunks.map((_, i) => `chunk_${globalIndex++}`),
+//       documents: chunks.map((c) => c.text),
+//       metadatas: chunks.map((c) => ({
+//         startIndex: c.startIndex,
+//         endIndex: c.endIndex,
+//         tokenCount: c.tokenCount,
+//       })),
+//     });
+//   }
 
-  const response = await ask("что такое буллинг?");
-  console.log("ответ: ", response);
-})();
+//   const response = await ask("что такое буллинг?");
+//   console.log("ответ: ", response);
+// })();
 
 const app = express();
 app.use(express.json());
