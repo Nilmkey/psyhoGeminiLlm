@@ -8,8 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import connectToMongo, { Dialog } from "./sheme.js";
 import { fileURLToPath } from "url";
 import path from "path";
-// import DATA from "./texts.js";
-// import { promptEx } from "./texts.js";
+import DATA from "./texts.js";
 
 dotenv.config({ path: "../../.env" });
 
@@ -224,31 +223,36 @@ const chunky = async (text) => {
   ).chunk(text);
 };
 
-// (async () => {
-//   const collection = await chroma.getOrCreateCollection({
-//     name: "PsyhologyDate",
-//     embeddingFunction: embedder,
-//   });
-// let globalIndex = 0;
-// for (const text of DATA) {
-//   const chunks = await chunky(text);
-//   await collection.add({
-//     ids: chunks.map((_, i) => `chunk_${globalIndex++}`),
-//     documents: chunks.map((c) => c.text),
-//     metadatas: chunks.map((c) => ({
-//       startIndex: c.startIndex,
-//       endIndex: c.endIndex,
-//       tokenCount: c.tokenCount,
-//     })),
-//   });
-// }
+(async () => {
+  const collection = await chroma.getOrCreateCollection({
+    name: "PsyhologyDate",
+    embeddingFunction: embedder,
+  });
+  let globalIndex = 0;
+  for (const text of DATA) {
+    const chunks = await chunky(text);
+    await collection.add({
+      ids: chunks.map((_, i) => `chunk_${globalIndex++}`),
+      documents: chunks.map((c) => c.text),
+      metadatas: chunks.map((c) => ({
+        startIndex: c.startIndex,
+        endIndex: c.endIndex,
+        tokenCount: c.tokenCount,
+      })),
+    });
+  }
 
-// const response = await ask("что такое буллинг?");
-// console.log("ответ: ", response);
-// })();
+  const response = await ask("что такое буллинг?");
+  console.log("ответ: ", response);
+})();
 
 const app = express();
 app.use(express.json());
+
+app.get("/api/session", (req, res) => {
+  const sessionId = uuidv4();
+  return res.status(200).json({ sessionId: sessionId });
+});
 
 // app.post("/api/uploadDate", (req, res) => {});
 app.post("/api/ask", async (req, res) => {
@@ -274,11 +278,6 @@ app.post("/api/ask", async (req, res) => {
 app.use(express.static(path.join(__dirname, "../../dist")));
 app.use((_req, res) => {
   res.status(200).sendFile(path.join(__dirname, "../../dist/index.html"));
-});
-
-app.get("/api/session", (req, res) => {
-  const sessionId = uuidv4();
-  return res.status(200).json({ sessionId: sessionId });
 });
 
 app.listen(3000, () => {
